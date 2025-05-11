@@ -15,6 +15,26 @@ from crewai_tools import FirecrawlSearchTool
 import sqlite3
 import uuid
 import datetime
+import streamlit.components.v1 as components
+
+def get_ip():
+    components.html(
+        """
+        <script>
+        fetch('https://api.ipify.org/?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const streamlitEvent = new Event("streamlit:ip");
+                streamlitEvent.detail = data.ip;
+                window.dispatchEvent(streamlitEvent);
+            });
+        </script>
+        """,
+        height=0,
+    )
+
+    ip = st.experimental_get_query_params().get("ip", [None])[0]
+    return ip
 
 
 from crewai import LLM
