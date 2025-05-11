@@ -68,10 +68,16 @@ model = genai.GenerativeModel('gemini-2.0-flash-001')
 
 
 # Assign a session ID to track unique/repeated visitors
-if 'session_id' not in st.session_state:
-    st.session_state.session_id = str(uuid.uuid4())
+if 'user_ip' not in st.session_state:
+    get_ip()
+    st.stop()  # Pause to wait for the JS to fetch IP
 
-session_id = st.session_state.session_id
+user_ip = st.session_state.get("user_ip")
+if not user_ip:
+    user_ip = "unknown"
+
+session_id = user_ip
+
 
 # Check if visitor exists
 c.execute('SELECT visits FROM visitors WHERE session_id = ?', (session_id,))
